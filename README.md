@@ -1,8 +1,8 @@
 # Arduino-TWI
 
 The TWI library is an abstract interface for I2C device drivers. The
-library also includes a software implementation using GPIO. It also
-includes an example device driver for the DS1307, Real-Time Clock.
+library also includes a software implementation using GPIO and an
+example device driver for the DS1307, Real-Time Clock.
 
 ## Classes
 
