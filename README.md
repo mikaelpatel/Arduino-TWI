@@ -9,3 +9,8 @@ example device driver for the DS1307, Real-Time Clock.
 * [Abstract Two-Wire Interface, TWI](./src/TWI.h)
 * [Software Two-Wire Interface, Software::TWI](./src/Software/TWI.h)
 * [DS1307, Real-Time Clock](./src/DS1307.h)
+
+## Example Sketches
+
+* [DS1307](./examples/DS1307)
+* [Scanner](./examples/Scanner)

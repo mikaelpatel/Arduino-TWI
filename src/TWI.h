@@ -90,22 +90,22 @@ public:
       return (m_twi.read(m_addr, buf, count));
     }
 
-  /**
-   * Write data from the given buffer to device.
-   * @param[in] buf buffer pointer.
-   * @param[in] count buffer size in bytes.
-   * @return number of bytes written or negative error code.
-   */
+    /**
+     * Write data from the given buffer to device.
+     * @param[in] buf buffer pointer.
+     * @param[in] count buffer size in bytes.
+     * @return number of bytes written or negative error code.
+     */
     int write(const void* buf, size_t count)
     {
       return (m_twi.write(m_addr, buf, count));
     }
 
-  /**
-   * Write data to device with from given io vector.
-   * @param[in] vp io vector pointer.
-   * @return number of bytes written or negative error code.
-   */
+    /**
+     * Write data to device with from given io vector.
+     * @param[in] vp io vector pointer.
+     * @return number of bytes written or negative error code.
+     */
     int write(iovec_t* vp)
     {
       return (m_twi.write(m_addr, vp));
