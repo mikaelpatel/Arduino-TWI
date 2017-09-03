@@ -6,6 +6,6 @@ includes an example device driver for the DS1307, Real-Time Clock.
 
 ## Classes
 
-* [Abstrace Two-Wire Interface, TWI](./src/TWI.h)
+* [Abstract Two-Wire Interface, TWI](./src/TWI.h)
 * [Software Two-Wire Interface, Software::TWI](./src/Software/TWI.h)
 * [DS1307, Real-Time Clock](./src/DS1307.h)
