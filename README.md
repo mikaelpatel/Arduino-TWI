@@ -16,4 +16,5 @@ example device drivers for the DS1307, Real-Time Clock, and AT24CXX,
 
 * [AT24CXX](./examples/AT24CXX)
 * [DS1307](./examples/DS1307)
+* [Multitasking](./examples/Multitasking)
 * [Scanner](./examples/Scanner)
