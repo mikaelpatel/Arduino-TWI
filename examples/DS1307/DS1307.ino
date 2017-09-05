@@ -10,30 +10,31 @@ void setup()
   Serial.begin(57600);
   while (!Serial);
 
-  time_t now = { 0x00, 0x0, 0x0, 0x10, 0x10, 0x10, 0x10 };
+  // Set real-time clock and enable square-wave signal
+  struct tm now(THURSDAY, 2018, SEPTEMBER, 13, 13, 35, 0);
   rtc.set_time(now);
-
   rtc.enable();
 }
 
 void loop()
 {
-  time_t now;
+  // Read real-time clock and print time every second
+  struct tm now;
   if (!rtc.get_time(now)) return;
-
-  Serial.print(F("20"));
-  Serial.print(now.year, HEX);
-  Serial.print('-');
-  Serial.print(now.month, HEX);
-  Serial.print('-');
-  Serial.print(now.date, HEX);
-  Serial.print(' ');
-  Serial.print(now.hours, HEX);
-  Serial.print(':');
-  Serial.print(now.minutes, HEX);
-  Serial.print(':');
-  Serial.print(now.seconds, HEX);
-  Serial.println();
-
+  Serial.println(isotime(&now));
   delay(1000);
+}
+
+const char* isotime(const struct tm* tm)
+{
+  static const size_t BUF_MAX = 20;
+  static char buf[BUF_MAX];
+  sprintf(buf, "%d-%02d-%02d %02d:%02d:%02d",
+	  tm->tm_year + 1900,
+	  tm->tm_mon + 1,
+	  tm->tm_mday,
+	  tm->tm_hour,
+	  tm->tm_min,
+	  tm->tm_sec);
+  return (buf);
 }

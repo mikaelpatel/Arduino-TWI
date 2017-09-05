@@ -1,6 +1,6 @@
 /**
  * @file Software/TWI.h
- * @version 1.0
+ * @version 1.1
  *
  * @section License
  * Copyright (C) 2017, Mikael Patel
@@ -45,6 +45,34 @@ public:
 
   /**
    * @override{TWI}
+   * Start transaction for given device driver. Return true(1) if
+   * successful otherwise false(0).
+   * @param[in] dev device that acquires the bus.
+   * @return bool.
+   */
+  virtual bool acquire(Device* dev)
+  {
+    while (m_dev != NULL) yield();
+    m_dev = dev;
+    m_start = true;
+    return (start_condition());
+  }
+
+  /**
+   * @override{TWI}
+   * Stop transaction. Mark the bus as available. Return true(1) if
+   * successful otherwise false(0).
+   * @return bool.
+   */
+  virtual bool release()
+  {
+    m_start = false;
+    m_dev = NULL;
+    return (stop_condition());
+  }
+
+  /**
+   * @override{TWI}
    * Read data from device with given address into given buffer.
    * @param[in] addr device address.
    * @param[in] buf buffer pointer.
@@ -53,22 +81,25 @@ public:
    */
   virtual int read(uint8_t addr, void* buf, size_t count)
   {
-    uint8_t* bp = (uint8_t*) buf;
-    int res = -1;
-    bool nack;
-    if (!start_condition()) return (false);
-    if (!write_byte((addr << 1) | 1, nack) || nack) goto error;
-    for (size_t i = 0; i < count; i++, bp++) {
-      bool ack = (i + 1 != count);
-      uint8_t data;
-      if (!read_byte(data, ack)) goto error;
-      *bp = data;
-    }
-    res = count;
+    // Check if repeated start condition should be generated
+    if (!m_start && !repeated_start_condition()) return (-1);
+    m_start = false;
 
-  error:
-    stop_condition();
-    return (res);
+    // Address device with read request and check that it acknowledges
+    bool nack;
+    if (!write_byte(addr | 1, nack) || nack) return (-1);
+
+    // Read bytes and acknowledge until required size
+    uint8_t* bp = (uint8_t*) buf;
+    size_t size = count;
+    while (size--) {
+      bool ack = (size != 0);
+      uint8_t data;
+      if (!read_byte(data, ack)) return (-1);
+      *bp++ = data;
+    }
+
+    return (count);
   }
 
   /**
@@ -80,46 +111,61 @@ public:
    */
   virtual int write(uint8_t addr, iovec_t* vp)
   {
-    const uint8_t* bp;
-    size_t size;
-    int res = -1;
-    int count = 0;
+    // Check if repeated start condition should be generated
+    if (!m_start && !repeated_start_condition()) return (-1);
+    m_start = false;
+
+    // Address device with write request and check that it acknowledges
     bool nack;
-    if (!start_condition()) return (-1);
-    if (!write_byte((addr << 1) | 0, nack) || nack) goto error;
-    if (vp != NULL) {
-      for(; vp->buf != NULL; vp++) {
-	bp = (const uint8_t*) vp->buf;
-	size = vp->size;
-	for (size_t i = 0; i < size; i++, bp++) {
-	  uint8_t data = *bp;
-	  if (!write_byte(data, nack) || nack) goto error;
-	}
-	count += size;
+    if (!write_byte(addr | 0, nack) || nack) return (-1);
+    if (vp == NULL) return (0);
+
+    // Write given io vector buffers to device
+    int count = 0;
+    for(; vp->buf != NULL; vp++) {
+      const uint8_t* bp = (const uint8_t*) vp->buf;
+      size_t size = vp->size;
+      count += size;
+      while (size--) {
+	uint8_t data = *bp++;
+	if (!write_byte(data, nack) || nack) return (-1);
       }
     }
-    res = count;
-
-  error:
-    stop_condition();
-    return (res);
+    return (count);
   }
 
 protected:
-  /** Start condition delay time. */
-  static const int T1 = 5;
+  /** Start condition delay time: 4.0 us */
+  static const int T1 = 4;
 
-  /** Basic clock delay time. */
-  static const int T2 = 4;
+  /** Basic clock delay time: 4.7 us */
+  static const int T2 = 5;
 
-  /** Maximum number of clock stretching retries. */
-  static const int CLOCK_STRETCHING_RETRY_MAX = 20;
+  /** Maximum number of clock stretching retries: 100 us */
+  static const int CLOCK_STRETCHING_RETRY_MAX = 25;
 
   /** Data signal pin. */
   GPIO<SDA_PIN> m_sda;
 
   /** Clock signal pin. */
   GPIO<SCL_PIN> m_scl;
+
+  /** Transaction state. */
+  bool m_start;
+
+  /**
+   * Allow device to stretch clock signal. Return true(1) if
+   * successful otherwise false(0).
+   * @return bool.
+   */
+  bool clock_stretching()
+  {
+    for (int retry = 0; retry < CLOCK_STRETCHING_RETRY_MAX; retry++) {
+      if (m_scl) return (true);
+      delayMicroseconds(T1);
+    }
+    return (false);
+  }
 
   /**
    * Generate start condition. Return true(1) if successful otherwise
@@ -137,6 +183,23 @@ protected:
   }
 
   /**
+   * Generate repeated start condition. Return true(1) if successful otherwise
+   * false(0).
+   * @return bool.
+   */
+  bool repeated_start_condition()
+  {
+    m_sda.input();
+    if (m_sda == 0) return (false);
+    m_scl.input();
+    delayMicroseconds(T2);
+    m_sda.output();
+    delayMicroseconds(T1);
+    m_scl.output();
+    return (true);
+  }
+
+  /**
    * Generate stop condition. Return true(1) if successful otherwise
    * false(0).
    * @return bool.
@@ -144,29 +207,11 @@ protected:
   bool stop_condition()
   {
     m_sda.output();
-    delayMicroseconds(T2);
     m_scl.input();
+    delayMicroseconds(T1);
     if (!clock_stretching()) return (false);
-    delayMicroseconds(T2);
     m_sda.input();
-    delayMicroseconds(T2);
-    if (m_sda == 0) return (false);
-    delayMicroseconds(T2);
-    return (true);
-  }
-
-  /**
-   * Allow device to stretch clock signal. Return true(1) if
-   * successful otherwise false(0).
-   * @return bool.
-   */
-  bool clock_stretching()
-  {
-    for (int retry = 0; retry < CLOCK_STRETCHING_RETRY_MAX; retry++) {
-      if (m_scl) return (true);
-      delayMicroseconds(T2);
-    }
-    return (false);
+    return (m_sda == 0);
   }
 
   /**
@@ -177,13 +222,10 @@ protected:
    */
   bool write_bit(bool value)
   {
-    if (value)
-      m_sda.input();
-    else
-      m_sda.output();
+    if (value) m_sda.input(); else m_sda.output();
     delayMicroseconds(T2);
     m_scl.input();
-    delayMicroseconds(T2);
+    delayMicroseconds(T1);
     if (!clock_stretching()) return (false);
     m_scl.output();
     return (true);
@@ -200,8 +242,8 @@ protected:
     m_sda.input();
     delayMicroseconds(T2);
     m_scl.input();
+    delayMicroseconds(T1);
     if (!clock_stretching()) return (false);
-    delayMicroseconds(T2);
     value = m_sda;
     m_scl.output();
     return (true);
