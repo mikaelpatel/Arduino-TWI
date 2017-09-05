@@ -5,7 +5,7 @@ library includes a software implementation using GPIO and example
 device drivers for the DS1307, Real-Time Clock, and AT24CXX, 2-Wire
 Serial EEPROM.
 
-The software implementation support both repeated start condition
+The software implementation supports both repeated start condition
 and device driver mutex on multi-tasking.
 
 Repeated start condition allows combined write/read operations to one
