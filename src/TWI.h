@@ -161,6 +161,6 @@ public:
   virtual int write(uint8_t addr, iovec_t* vp) = 0;
 
 protected:
-  Device* m_dev;
+  volatile Device* m_dev;
 };
 #endif
