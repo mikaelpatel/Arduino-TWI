@@ -5,6 +5,16 @@ library includes a software implementation using GPIO and example
 device drivers for the DS1307, Real-Time Clock, and AT24CXX, 2-Wire
 Serial EEPROM.
 
+The software implementation support both repeated start condition
+and device driver mutex on multi-tasking.
+
+Repeated start condition allows combined write/read operations to one
+or more devices without releasing the bus and thus with the guarantee
+that the operation is not interrupted.
+
+Device driver mutex allows a task to complete a device driver function
+in a synchronized manner.
+
 ## Classes
 
 * [Abstract Two-Wire Interface, TWI](./src/TWI.h)
