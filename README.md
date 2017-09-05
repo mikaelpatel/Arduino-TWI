@@ -21,8 +21,8 @@ in a synchronized manner when using the
 
 * [Abstract Two-Wire Interface, TWI](./src/TWI.h)
 * [Software Two-Wire Interface, Software::TWI](./src/Software/TWI.h)
-* [AT24CXX, Two-Wire Serial EEPROM](./src/AT24CXX.h)
-* [DS1307, Real-Time Clock](./src/DS1307.h)
+* [AT24CXX, Two-Wire Serial EEPROM](./src/Driver/AT24CXX.h)
+* [DS1307, Real-Time Clock](./src/Driver/DS1307.h)
 
 ## Example Sketches
 

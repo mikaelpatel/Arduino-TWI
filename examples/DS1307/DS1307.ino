@@ -1,8 +1,15 @@
 #include "TWI.h"
 #include "Software/TWI.h"
-#include "DS1307.h"
+#include "Driver/DS1307.h"
 
+#if defined(ARDUINO_attiny)
+#include "Software/Serial.h"
+Software::Serial<BOARD::D0> Serial;
+Software::TWI<BOARD::D1, BOARD::D2> twi;
+#else
 Software::TWI<BOARD::D18, BOARD::D19> twi;
+#endif
+
 DS1307 rtc(twi);
 
 void setup()

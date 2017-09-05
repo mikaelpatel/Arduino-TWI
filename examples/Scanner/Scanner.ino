@@ -1,7 +1,13 @@
 #include "TWI.h"
 #include "Software/TWI.h"
 
+#if defined(ARDUINO_attiny)
+#include "Software/Serial.h"
+Software::Serial<BOARD::D0> Serial;
+Software::TWI<BOARD::D1, BOARD::D2> twi;
+#else
 Software::TWI<BOARD::D18, BOARD::D19> twi;
+#endif
 
 void setup()
 {

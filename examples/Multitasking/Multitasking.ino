@@ -1,10 +1,17 @@
 #include "Scheduler.h"
 #include "TWI.h"
 #include "Software/TWI.h"
-#include "DS1307.h"
-#include "AT24CXX.h"
+#include "Driver/DS1307.h"
+#include "Driver/AT24CXX.h"
 
+#if defined(ARDUINO_attiny)
+#include "Software/Serial.h"
+Software::Serial<BOARD::D0> Serial;
+Software::TWI<BOARD::D1, BOARD::D2> twi;
+#else
 Software::TWI<BOARD::D18, BOARD::D19> twi;
+#endif
+
 AT24C32 eeprom(twi);
 DS1307 rtc(twi);
 

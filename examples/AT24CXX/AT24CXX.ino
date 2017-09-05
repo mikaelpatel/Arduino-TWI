@@ -1,9 +1,16 @@
 #include "TWI.h"
 #include "GPIO.h"
 #include "Software/TWI.h"
-#include "AT24CXX.h"
+#include "Driver/AT24CXX.h"
 
+#if defined(ARDUINO_attiny)
+#include "Software/Serial.h"
+Software::Serial<BOARD::D0> Serial;
+Software::TWI<BOARD::D1, BOARD::D2> twi;
+#else
 Software::TWI<BOARD::D18, BOARD::D19> twi;
+#endif
+
 AT24C32 eeprom(twi);
 
 // Data vector (64 bytes). Force multi-page access
