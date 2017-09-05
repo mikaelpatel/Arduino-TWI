@@ -13,9 +13,10 @@ void loop()
 {
   int i = 0;
   for (uint8_t addr = 3; addr < 128; addr++) {
-    twi.start_condition();
-    int res = twi.write(addr << 1, NULL);
-    twi.stop_condition();
+    TWI::Device dev(twi, addr);
+    dev.acquire();
+    int res = dev.write(NULL);
+    dev.release();
     if (res != 0) continue;
     Serial.print(i++);
     Serial.print(':');
