@@ -20,6 +20,7 @@ in a synchronized manner when using the
 ## Classes
 
 * [Abstract Two-Wire Interface, TWI](./src/TWI.h)
+* [Two-Wire Device Driver Interface, TWI::Device](./src/TWI.h)
 * [Software Two-Wire Interface, Software::TWI](./src/Software/TWI.h)
 * [AT24CXX, Two-Wire Serial EEPROM](./src/Driver/AT24CXX.h)
 * [DS1307, Real-Time Clock](./src/Driver/DS1307.h)
