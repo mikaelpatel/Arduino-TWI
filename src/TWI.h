@@ -50,7 +50,7 @@ public:
      */
     bool acquire()
     {
-      return (m_twi.acquire(this));
+      return (m_twi.acquire());
     }
 
     /**
@@ -106,7 +106,7 @@ public:
   /**
    * Default constructor.
    */
-  TWI() : m_dev(NULL) {}
+  TWI() : m_busy(false) {}
 
   /**
    * @override{TWI}
@@ -114,7 +114,7 @@ public:
    * false(0).
    * @return bool.
    */
-  virtual bool acquire(Device* dev) = 0;
+  virtual bool acquire() = 0;
 
   /**
    * @override{TWI}
@@ -161,6 +161,6 @@ public:
   virtual int write(uint8_t addr, iovec_t* vp) = 0;
 
 protected:
-  volatile Device* m_dev;
+  volatile bool m_busy;
 };
 #endif

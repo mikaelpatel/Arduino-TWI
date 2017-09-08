@@ -5,13 +5,10 @@
 #include "Driver/AT24CXX.h"
 
 #if defined(ARDUINO_attiny)
-#include "Software/Serial.h"
-Software::Serial<BOARD::D0> Serial;
-Software::TWI<BOARD::D1, BOARD::D2> twi;
-#else
-Software::TWI<BOARD::D18, BOARD::D19> twi;
+#error Multitasking: attiny boards not supported
 #endif
 
+Software::TWI<BOARD::D18, BOARD::D19> twi;
 AT24C32 eeprom(twi);
 DS1307 rtc(twi);
 
@@ -71,8 +68,9 @@ void setup()
   Serial.begin(57600);
   while (!Serial);
 
-  Scheduler.start(logger::setup, logger::loop);
-  Scheduler.startLoop(clock::loop);
+  Scheduler.begin(128);
+  Scheduler.start(logger::setup, logger::loop, 128);
+  Scheduler.startLoop(clock::loop, 128);
 }
 
 void loop()

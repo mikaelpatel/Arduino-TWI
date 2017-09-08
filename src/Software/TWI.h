@@ -47,13 +47,12 @@ public:
    * @override{TWI}
    * Start transaction for given device driver. Return true(1) if
    * successful otherwise false(0).
-   * @param[in] dev device that acquires the bus.
    * @return bool.
    */
-  virtual bool acquire(Device* dev)
+  virtual bool acquire()
   {
-    while (m_dev != NULL) yield();
-    m_dev = dev;
+    while (m_busy) yield();
+    m_busy = true;
     m_start = true;
     return (start_condition());
   }
@@ -67,7 +66,7 @@ public:
   virtual bool release()
   {
     m_start = false;
-    m_dev = NULL;
+    m_busy = false;
     return (stop_condition());
   }
 
