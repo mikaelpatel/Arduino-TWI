@@ -157,13 +157,13 @@ protected:
     REP_START = 0x10,		//!< Repeated start transmitted.
     ARB_LOST = 0x38,		//!< Arbitration lost.
     MT_SLA_ACK = 0x18,		//!< Slave address/write sent, ACK received.
-    MT_SLA_NACK = 0x20,		//!< - NACK received.
+    MT_SLA_NACK = 0x20,		//!< dito, NACK received.
     MT_DATA_ACK = 0x28,		//!< Data write sent, ACK received.
-    MT_DATA_NACK = 0x30,	//!< - NACK received.
+    MT_DATA_NACK = 0x30,	//!< dito, NACK received.
     MR_SLA_ACK = 0x40,		//!< Slave address/read sent, ACK received.
-    MR_SLA_NACK = 0x48,		//!< - NACK received.
+    MR_SLA_NACK = 0x48,		//!< dito, NACK received.
     MR_DATA_ACK = 0x50,		//!< Data received, ACK sent.
-    MR_DATA_NACK = 0x58,	//!< - NACK sent.
+    MR_DATA_NACK = 0x58,	//!< dito, NACK sent.
     MASK = 0xF8,		//!< Mask status code.
     BUS_ERROR = 0x00		//!< Bus error state.
   } __attribute__((packed));
