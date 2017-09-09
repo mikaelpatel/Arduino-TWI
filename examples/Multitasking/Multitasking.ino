@@ -1,6 +1,5 @@
 #include "Scheduler.h"
 #include "TWI.h"
-#include "Software/TWI.h"
 #include "Driver/DS1307.h"
 #include "Driver/AT24CXX.h"
 
@@ -8,7 +7,18 @@
 #error Multitasking: attiny boards not supported
 #endif
 
+// #define USE_SOFTWARE_TWI
+#define USE_HARDWARE_TWI
+
+#if defined(USE_SOFTWARE_TWI)
+#include "GPIO.h"
+#include "Software/TWI.h"
 Software::TWI<BOARD::D18, BOARD::D19> twi;
+#elif defined(USE_HARDWARE_TWI)
+#include "Hardware/TWI.h"
+Hardware::TWI twi;
+#endif
+
 AT24C32 eeprom(twi);
 DS1307 rtc(twi);
 
@@ -68,9 +78,8 @@ void setup()
   Serial.begin(57600);
   while (!Serial);
 
-  Scheduler.begin(128);
-  Scheduler.start(logger::setup, logger::loop, 128);
-  Scheduler.startLoop(clock::loop, 128);
+  Scheduler.start(logger::setup, logger::loop);
+  Scheduler.startLoop(clock::loop);
 }
 
 void loop()

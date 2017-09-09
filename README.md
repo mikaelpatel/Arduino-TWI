@@ -1,7 +1,7 @@
 # Arduino-TWI
 
 The TWI library is an abstract interface for I2C device drivers. The
-library includes a software implementation and example device drivers
+library includes a hardware and software, and example device drivers
 for the DS1307, Real-Time Clock, and AT24CXX, 2-Wire Serial EEPROM.
 
 The software implementation of the TWI interface uses the
@@ -17,12 +17,13 @@ Device driver mutex allows a task to complete a device driver function
 in a synchronized manner when using the
 [Arduino-Scheduler](https://github.com/mikaelpatel/Arduino-Scheduler).
 
-Version: 1.2
+Version: 1.3
 
 ## Classes
 
 * [Abstract Two-Wire Interface, TWI](./src/TWI.h)
 * [Two-Wire Device Driver Interface, TWI::Device](./src/TWI.h)
+* [Hardware Two-Wire Interface, Hardware::TWI](./src/Hardware/TWI.h)
 * [Software Two-Wire Interface, Software::TWI](./src/Software/TWI.h)
 * [AT24CXX, Two-Wire Serial EEPROM](./src/Driver/AT24CXX.h)
 * [DS1307, Real-Time Clock](./src/Driver/DS1307.h)

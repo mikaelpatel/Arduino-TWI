@@ -103,6 +103,9 @@ public:
     uint8_t m_addr;
   };
 
+  /** Default Two-Wire Interface clock: 100 KHz. */
+  static const uint32_t DEFAULT_FREQ = 100000L;
+
   /**
    * Default constructor.
    */
