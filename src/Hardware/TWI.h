@@ -151,28 +151,21 @@ public:
   }
 
 protected:
-  /** Two Wire AVR hardware status codes for Master. */
+  /** Status codes for Master Transmitter Mode. */
   enum {
-    /** General Status Codes. */
-    START = 0x08,
-    REP_START = 0x10,
-    ARB_LOST = 0x38,
-
-    /** Master Transmitter Mode. */
-    MT_SLA_ACK = 0x18,
-    MT_SLA_NACK = 0x20,
-    MT_DATA_ACK = 0x28,
-    MT_DATA_NACK = 0x30,
-
-    /** Master Receiver Mode. */
-    MR_SLA_ACK = 0x40,
-    MR_SLA_NACK = 0x48,
-    MR_DATA_ACK = 0x50,
-    MR_DATA_NACK = 0x58,
-
-    /** Misc. */
-    MASK = 0xF8,
-    BUS_ERROR = 0x00
+    START = 0x08,		//!< Start condition transmitted.
+    REP_START = 0x10,		//!< Repeated start transmitted.
+    ARB_LOST = 0x38,		//!< Arbitration lost.
+    MT_SLA_ACK = 0x18,		//!< Slave address/write sent, ACK received.
+    MT_SLA_NACK = 0x20,		//!< - NACK received.
+    MT_DATA_ACK = 0x28,		//!< Data write sent, ACK received.
+    MT_DATA_NACK = 0x30,	//!< - NACK received.
+    MR_SLA_ACK = 0x40,		//!< Slave address/read sent, ACK received.
+    MR_SLA_NACK = 0x48,		//!< - NACK received.
+    MR_DATA_ACK = 0x50,		//!< Data received, ACK sent.
+    MR_DATA_NACK = 0x58,	//!< - NACK sent.
+    MASK = 0xF8,		//!< Mask status code.
+    BUS_ERROR = 0x00		//!< Bus error state.
   } __attribute__((packed));
 
 
@@ -188,7 +181,7 @@ protected:
     return ((TWSR & MASK) == status);
   }
 
-  /** Transaction state. */
+  /** Start condition issued flag. */
   bool m_start;
 };
 };
