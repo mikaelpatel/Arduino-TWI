@@ -2,10 +2,10 @@
 
 The TWI library is an abstract interface for I2C device drivers. The
 library includes a Hardware::TWI and Software::TWI implementation, and
-example device drivers for the DS1307, Real-Time Clock, and AT24CXX,
-2-Wire Serial EEPROM.
+example device drivers for Real-Time Clock (DS1307), 2-Wire Serial
+EEPROM (AT24CXX), I2C Humidity and Temperature Sensor (Si70XX).
 
-Version: 1.3
+Version: 1.4
 */
 
 /** @page License

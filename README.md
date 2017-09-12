@@ -2,22 +2,23 @@
 
 The TWI library is an abstract interface for I2C device drivers. The
 library includes a hardware and software, and example device drivers
-for the DS1307, Real-Time Clock, and AT24CXX, 2-Wire Serial EEPROM.
+for Real-Time Clock (DS1307), 2-Wire Serial EEPROM (AT24CXX), I2C
+Humidity and Temperature Sensor (Si70XX).
 
 The software implementation of the TWI interface uses the
 [Arduino-GPIO](https://github.com/mikaelpatel/Arduino-GPIO)
-library. It supports both repeated start condition and device driver
-mutex on multi-tasking.
+library. Both bus manager implementations supports both repeated start
+condition and device driver mutex on multi-tasking.
 
 Repeated start condition allows combined write/read operations to one
 or more devices without releasing the bus and thus with the guarantee
-that the operation is not interrupted.
+that the operation is not interrupted (when using multiple masters).
 
 Device driver mutex allows a task to complete a device driver function
 in a synchronized manner when using the
 [Arduino-Scheduler](https://github.com/mikaelpatel/Arduino-Scheduler).
 
-Version: 1.3
+Version: 1.4
 
 ## Classes
 
@@ -25,8 +26,9 @@ Version: 1.3
 * [Two-Wire Device Driver Interface, TWI::Device](./src/TWI.h)
 * [Hardware Two-Wire Interface, Hardware::TWI](./src/Hardware/TWI.h)
 * [Software Two-Wire Interface, Software::TWI](./src/Software/TWI.h)
-* [AT24CXX, Two-Wire Serial EEPROM](./src/Driver/AT24CXX.h)
-* [DS1307, Real-Time Clock](./src/Driver/DS1307.h)
+* [Two-Wire Serial EEPROM, AT24CXX](./src/Driver/AT24CXX.h)
+* [Real-Time Clock, DS1307](./src/Driver/DS1307.h)
+* [I2C Humidity and Temperature Sensor, Si70XX](./src/Driver/Si70XX.h)
 
 ## Example Sketches
 
@@ -34,6 +36,7 @@ Version: 1.3
 * [DS1307](./examples/DS1307)
 * [Multitasking](./examples/Multitasking)
 * [Scanner](./examples/Scanner)
+* [Si7021](./examples/Si7021)
 
 ## Dependencies
 
