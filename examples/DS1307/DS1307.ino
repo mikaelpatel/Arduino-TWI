@@ -43,10 +43,9 @@ void loop()
 
 const char* isotime(const struct tm* tm)
 {
-  static const char FORMAT[] PROGMEM = "%d-%02d-%02d %02d:%02d:%02d";
   static const size_t BUF_MAX = 20;
   static char buf[BUF_MAX];
-  sprintf_P(buf, FORMAT,
+  sprintf_P(buf, PSTR("%d-%02d-%02d %02d:%02d:%02d"),
 	    tm->tm_year + 1900,
 	    tm->tm_mon + 1,
 	    tm->tm_mday,
