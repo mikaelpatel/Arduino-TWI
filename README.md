@@ -34,3 +34,7 @@ Version: 1.3
 * [DS1307](./examples/DS1307)
 * [Multitasking](./examples/Multitasking)
 * [Scanner](./examples/Scanner)
+
+## Dependencies
+
+* [General Purpose Input/Output library for Arduino, GPIO](https://github.com/mikaelpatel/Arduino-GPIO)
