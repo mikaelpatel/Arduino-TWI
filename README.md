@@ -3,7 +3,8 @@
 The TWI library is an abstract interface for I2C device drivers. The
 library includes a hardware and software, and example device drivers
 for Real-Time Clock (DS1307), 2-Wire Serial EEPROM (AT24CXX), I2C
-Humidity and Temperature Sensor (Si70XX).
+Humidity and Temperature Sensor (Si70XX), and Remote 8-bit I/O
+expander (PCF8574/PCF8574A).
 
 The software implementation of the TWI interface uses the
 [Arduino-GPIO](https://github.com/mikaelpatel/Arduino-GPIO)
@@ -22,19 +23,20 @@ Version: 1.4
 
 ## Classes
 
-* [Abstract Two-Wire Interface, TWI](./src/TWI.h)
-* [Two-Wire Device Driver Interface, TWI::Device](./src/TWI.h)
+* [Abstract Two-Wire Bus Manager and Device Driver Interface, TWI](./src/TWI.h)
 * [Hardware Two-Wire Interface, Hardware::TWI](./src/Hardware/TWI.h)
 * [Software Two-Wire Interface, Software::TWI](./src/Software/TWI.h)
 * [Two-Wire Serial EEPROM, AT24CXX](./src/Driver/AT24CXX.h)
 * [Real-Time Clock, DS1307](./src/Driver/DS1307.h)
-* [I2C Humidity and Temperature Sensor, Si70XX](./src/Driver/Si70XX.h)
+* [Humidity and Temperature Sensor, Si70XX](./src/Driver/Si70XX.h)
+* [Remote 8-bit I/O expander, PCF8574](./src/Driver/PCF8574.h)
 
 ## Example Sketches
 
 * [AT24CXX](./examples/AT24CXX)
 * [DS1307](./examples/DS1307)
 * [Multitasking](./examples/Multitasking)
+* [PCF8574](./examples/PCF8574)
 * [Scanner](./examples/Scanner)
 * [Si7021](./examples/Si7021)
 

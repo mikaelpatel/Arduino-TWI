@@ -35,10 +35,12 @@ void setup()
 void loop()
 {
   sensor.measure_humidity();
+  delay(20);
   float humidity = sensor.read_humidity();
   float humidity_temperature = sensor.read_humidity_temperature();
 
   sensor.measure_temperature();
+  delay(10);
   float temperature = sensor.read_temperature();
 
   Serial.print(humidity);

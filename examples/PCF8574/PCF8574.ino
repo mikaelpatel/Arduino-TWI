@@ -1,4 +1,5 @@
 #include "TWI.h"
+#include "Driver/PCF8574.h"
 
 #define USE_SOFTWARE_TWI
 // #define USE_HARDWARE_TWI
@@ -18,26 +19,34 @@ Software::TWI<BOARD::D18, BOARD::D19> twi;
 Hardware::TWI twi;
 #endif
 
+PCF8574 port(twi, 0);
+PCF8574::GPIO<0> pin(port);
+
 void setup()
 {
   Serial.begin(57600);
   while (!Serial);
+
+  pin.output();
 }
 
 void loop()
 {
-  int i = 0;
-  for (uint8_t addr = 3; addr < 128; addr++) {
-    TWI::Device dev(twi, addr);
-    dev.acquire();
-    int res = dev.write(NULL);
-    dev.release();
-    if (res != 0) continue;
-    Serial.print(i++);
-    Serial.print(':');
-    Serial.print(F(" 0x"));
-    Serial.println(addr, HEX);
-  }
-  Serial.println();
-  delay(5000);
+  static bool state = false;
+
+  pin = state;
+  Serial.print(F("pin = "));
+  Serial.println(pin);
+
+  Serial.print(F("port.read() = "));
+  Serial.println(port.read(), BIN);
+  delay(10);
+
+  for (int i = 0; i < 16; i++)
+    pin = (state = !state);
+  delay(10);
+
+  uint8_t buf[] = { 0, 1, 0, 1, 0, 1, 0, 1 };
+  port.write(buf, sizeof(buf));
+  delay(1000);
 }
