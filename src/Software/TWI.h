@@ -37,10 +37,8 @@ public:
    */
   TWI()
   {
-    m_sda.input();
-    m_scl.input();
-    m_sda.low();
-    m_scl.low();
+    m_sda.open_collector();
+    m_scl.open_collector();
   }
 
   /**

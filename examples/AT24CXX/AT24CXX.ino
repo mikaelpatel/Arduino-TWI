@@ -1,8 +1,8 @@
 #include "TWI.h"
 #include "Driver/AT24CXX.h"
 
-// #define USE_SOFTWARE_TWI
-#define USE_HARDWARE_TWI
+#define USE_SOFTWARE_TWI
+// #define USE_HARDWARE_TWI
 
 #if defined(USE_SOFTWARE_TWI)
 #include "GPIO.h"
@@ -12,7 +12,7 @@
 Software::Serial<BOARD::D0> Serial;
 Software::TWI<BOARD::D1, BOARD::D2> twi;
 #else
-Software::TWI<BOARD::D18, BOARD::D19> twi;
+Software::TWI<BOARD::D6, BOARD::D7> twi;
 #endif
 #elif defined(USE_HARDWARE_TWI)
 #include "Hardware/TWI.h"
@@ -23,7 +23,7 @@ AT24C32 eeprom(twi);
 
 // Data vector (64 bytes). Force multi-page access
 const uint16_t V_EEPROM = eeprom.PAGE_MAX / 2;
-int v[32];
+int16_t v[32];
 
 void setup()
 {

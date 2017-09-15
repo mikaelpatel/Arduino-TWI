@@ -196,7 +196,7 @@ protected:
     bcd_t date;			//!< 01-31 Date.
     bcd_t month;		//!< 01-12 Month.
     bcd_t year;			//!< 00-99 Year.
-  };
+  } __attribute__((packed));
 
   /**
    * The Timekeeper Control Register bitfields (pp. 9).
@@ -221,7 +221,8 @@ protected:
      * Default constructor will clear all bitfields.
      */
     control_t() : as_uint8(0) {}
-  };
+  } __attribute__((packed));
+
 
   /**
    * The Timekeeper Registers (Table 2, pp. 8).
@@ -230,6 +231,6 @@ protected:
     rtc_t rtc;			//!< Clock/Calender Registers.
     control_t control;		//!< Control Register.
     uint8_t ram[RAM_MAX];	//!< Random Access Memory.
-  };
+  } __attribute__((packed));
 };
 #endif

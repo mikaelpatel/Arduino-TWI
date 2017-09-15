@@ -11,7 +11,7 @@
 Software::Serial<BOARD::D0> Serial;
 Software::TWI<BOARD::D1, BOARD::D2> twi;
 #else
-Software::TWI<BOARD::D18, BOARD::D19> twi;
+Software::TWI<BOARD::D6, BOARD::D7> twi;
 #endif
 #elif defined(USE_HARDWARE_TWI)
 #include "Hardware/TWI.h"

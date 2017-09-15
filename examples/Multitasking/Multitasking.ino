@@ -7,13 +7,13 @@
 #error Multitasking: attiny boards not supported
 #endif
 
-// #define USE_SOFTWARE_TWI
-#define USE_HARDWARE_TWI
+#define USE_SOFTWARE_TWI
+// #define USE_HARDWARE_TWI
 
 #if defined(USE_SOFTWARE_TWI)
 #include "GPIO.h"
 #include "Software/TWI.h"
-Software::TWI<BOARD::D18, BOARD::D19> twi;
+Software::TWI<BOARD::D6, BOARD::D7> twi;
 #elif defined(USE_HARDWARE_TWI)
 #include "Hardware/TWI.h"
 Hardware::TWI twi;
@@ -53,7 +53,7 @@ namespace clock {
 namespace logger {
 
   const size_t DATA_MAX = 32;
-  int data[DATA_MAX];
+  int16_t data[DATA_MAX];
 
   void setup()
   {
@@ -84,7 +84,7 @@ void setup()
 void loop()
 {
   static int latest = -1;
-  int data[logger::DATA_MAX];
+  int16_t data[logger::DATA_MAX];
   int res = eeprom.read(&data, 0, sizeof(data));
   Serial.print(millis());
   Serial.print(F(":loop:read="));

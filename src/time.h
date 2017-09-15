@@ -45,7 +45,8 @@ struct tm {
     tm_isdst(0)
   {
   }
-};
+
+} __attribute__((packed));
 
 enum {
   SUNDAY,

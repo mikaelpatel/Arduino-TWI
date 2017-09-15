@@ -56,6 +56,7 @@ struct bcd_t {
 
 private:
   uint8_t m_value;
-};
+} __attribute__((packed));
+
 
 #endif

@@ -1,8 +1,24 @@
 #include "TWI.h"
-#include "Hardware/TWI.h"
 #include "Driver/Si70XX.h"
 
+#define USE_SOFTWARE_TWI
+// #define USE_HARDWARE_TWI
+
+#if defined(USE_SOFTWARE_TWI)
+#include "GPIO.h"
+#include "Software/TWI.h"
+#if defined(ARDUINO_attiny)
+#include "Software/Serial.h"
+Software::Serial<BOARD::D0> Serial;
+Software::TWI<BOARD::D1, BOARD::D2> twi;
+#else
+Software::TWI<BOARD::D6, BOARD::D7> twi;
+#endif
+#elif defined(USE_HARDWARE_TWI)
+#include "Hardware/TWI.h"
 Hardware::TWI twi;
+#endif
+
 Si70XX sensor(twi);
 
 void setup()
