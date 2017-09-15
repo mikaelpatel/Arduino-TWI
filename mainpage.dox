@@ -6,7 +6,7 @@ example device drivers for Real-Time Clock (DS1307), 2-Wire Serial
 EEPROM (AT24CXX), I2C Humidity and Temperature Sensor (Si70XX), and
 Remote 8-bit I/O expander (PCF8574/PCF8574A).
 
-Version: 1.4
+Version: 1.5
 */
 
 /** @page License
