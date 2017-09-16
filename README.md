@@ -19,7 +19,7 @@ Device driver mutex allows a task to complete a device driver function
 in a synchronized manner when using the
 [Arduino-Scheduler](https://github.com/mikaelpatel/Arduino-Scheduler).
 
-Version: 1.5
+Version: 1.6
 
 ## Classes
 

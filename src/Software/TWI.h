@@ -33,12 +33,13 @@ class TWI : public ::TWI {
 public:
   /**
    * Construct Two-Wire Interface (TWI) instance with given template
-   * parameters. Initiate GPIO pins for data and clock to input mode.
+   * parameters. Initiate GPIO pins for data and clock for open drain
+   * mode.
    */
   TWI()
   {
-    m_sda.open_collector();
-    m_scl.open_collector();
+    m_sda.open_drain();
+    m_scl.open_drain();
   }
 
   /**
