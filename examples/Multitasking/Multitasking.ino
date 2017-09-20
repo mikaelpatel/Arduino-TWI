@@ -1,7 +1,8 @@
-#include "Scheduler.h"
 #include "TWI.h"
-#include "Driver/DS1307.h"
 #include "Driver/AT24CXX.h"
+#include "RTC.h"
+#include "Driver/DS1307.h"
+#include "Scheduler.h"
 
 #if defined(ARDUINO_attiny)
 #error Multitasking: attiny boards not supported
@@ -22,29 +23,17 @@ Hardware::TWI twi;
 AT24C32 eeprom(twi);
 DS1307 rtc(twi);
 
-const char* isotime(const struct tm* tm)
-{
-  static const size_t BUF_MAX = 20;
-  static char buf[BUF_MAX];
-  sprintf_P(buf, PSTR("%d-%02d-%02d %02d:%02d:%02d"),
-	    tm->tm_year + 1900,
-	    tm->tm_mon + 1,
-	    tm->tm_mday,
-	    tm->tm_hour,
-	    tm->tm_min,
-	    tm->tm_sec);
-  return (buf);
-}
-
 namespace clock {
 
   void loop()
   {
     struct tm now;
+    char buf[32];
     if (!rtc.get_time(now)) return;
-    Serial.print(millis());
-    Serial.print(F(":clock: "));
-    Serial.println(isotime(&now));
+    // Serial.print(millis() / 1000.0);
+    // Serial.print(F(":clock: "));
+    Serial.println();
+    Serial.println(isotime_r(&now, buf));
     delay(1000);
   }
 
@@ -64,10 +53,10 @@ namespace logger {
   {
     for (size_t i = 0; i < DATA_MAX; i++) data[i] += 1;
     int res = eeprom.write(0, &data, sizeof(data));
-    Serial.print(millis());
+    Serial.print(millis() / 1000.0);
     Serial.print(F(":logger:write="));
     Serial.println(res);
-    delay(5000);
+    delay(5500);
   }
 
 };
@@ -86,7 +75,7 @@ void loop()
   static int latest = -1;
   int16_t data[logger::DATA_MAX];
   int res = eeprom.read(&data, 0, sizeof(data));
-  Serial.print(millis());
+  Serial.print(millis() / 1000.0);
   Serial.print(F(":loop:read="));
   Serial.print(res);
   if (data[0] != latest) {
@@ -98,5 +87,5 @@ void loop()
     }
   }
   Serial.println();
-  delay(700);
+  delay(750);
 }
