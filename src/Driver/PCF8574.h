@@ -233,7 +233,7 @@ protected:
   {}
 };
 
-class PCF8574A : protected PCF8574 {
+class PCF8574A : public PCF8574 {
 public:
   /**
    * Construct connection to PCF8574A Remote 8-bit I/O expander with
