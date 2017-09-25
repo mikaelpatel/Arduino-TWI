@@ -5,7 +5,7 @@ library includes a Hardware::TWI and Software::TWI implementation, and
 example device drivers for I2C Humidity and Temperature Sensor
 (Si70XX), and Remote 8-bit I/O expander (PCF8574/PCF8574A).
 
-Version: 1.8
+Version: 1.6
 */
 
 /** @page License
