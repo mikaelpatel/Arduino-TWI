@@ -1,7 +1,7 @@
 #include "TWI.h"
 
-#define USE_SOFTWARE_TWI
-// #define USE_HARDWARE_TWI
+// #define USE_SOFTWARE_TWI
+#define USE_HARDWARE_TWI
 
 #if defined(USE_SOFTWARE_TWI)
 #include "GPIO.h"
