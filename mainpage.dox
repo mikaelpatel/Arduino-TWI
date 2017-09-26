@@ -3,10 +3,10 @@
 The TWI library is an abstract interface for I2C device drivers. The
 library includes a Hardware::TWI and Software::TWI bus manager
 implementation, and example device drivers for I2C Humidity and
-Temperature Sensor (Si70XX), and Remote 8-bit I/O expander
-(PCF8574/PCF8574A).
+Temperature Sensor (Si70XX), Remote 8-bit I/O expander (PCF8574 and
+PCF8574A), and and Digital Pressure Sensor (BMP085).
 
-Version: 1.6
+Version: 1.7
 */
 
 /** @page License
