@@ -1,7 +1,11 @@
 #include "TWI.h"
 
-// #define USE_SOFTWARE_TWI
-#define USE_HARDWARE_TWI
+// Configure: TWI bus manager
+#define USE_SOFTWARE_TWI
+
+// Configure: Hardware TWI bus clock frequency
+#define FREQ 400000UL
+// #define FREQ 100000UL
 
 #if defined(USE_SOFTWARE_TWI)
 #include "GPIO.h"
@@ -11,11 +15,11 @@
 Software::Serial<BOARD::D0> Serial;
 Software::TWI<BOARD::D1, BOARD::D2> twi;
 #else
-Software::TWI<BOARD::D6, BOARD::D7> twi;
+Software::TWI<BOARD::D18, BOARD::D19> twi;
 #endif
-#elif defined(USE_HARDWARE_TWI)
+#else
 #include "Hardware/TWI.h"
-Hardware::TWI twi;
+Hardware::TWI twi(FREQ);
 #endif
 
 void setup()

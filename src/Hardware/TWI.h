@@ -71,6 +71,9 @@ public:
 
     // Issue stop condition and release bus
     TWCR = _BV(TWEN) | _BV(TWINT) | _BV(TWSTO);
+
+    // Allow the command to complete
+    delayMicroseconds(10);
     return (true);
   }
 

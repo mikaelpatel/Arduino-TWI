@@ -1,22 +1,21 @@
 #include "TWI.h"
 #include "Driver/Si70XX.h"
 
+// Configure: TWI bus manager
 #define USE_SOFTWARE_TWI
-// #define USE_HARDWARE_TWI
+
+// Configure: Hardware TWI bus clock frequency
+// #define FREQ 800000UL
+// #define FREQ 400000UL
+#define FREQ 100000UL
 
 #if defined(USE_SOFTWARE_TWI)
 #include "GPIO.h"
 #include "Software/TWI.h"
-#if defined(ARDUINO_attiny)
-#include "Software/Serial.h"
-Software::Serial<BOARD::D0> Serial;
-Software::TWI<BOARD::D1, BOARD::D2> twi;
+Software::TWI<BOARD::D18, BOARD::D19> twi;
 #else
-Software::TWI<BOARD::D6, BOARD::D7> twi;
-#endif
-#elif defined(USE_HARDWARE_TWI)
 #include "Hardware/TWI.h"
-Hardware::TWI twi;
+Hardware::TWI twi(FREQ);
 #endif
 
 Si70XX sensor(twi);

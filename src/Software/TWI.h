@@ -96,7 +96,6 @@ public:
       if (!read_byte(data, ack)) return (-1);
       *bp++ = data;
     }
-
     return (count);
   }
 
@@ -133,10 +132,10 @@ public:
   }
 
 protected:
-  /** Start condition delay time: 4.0 us */
+  /** Start condition delay time: 4.0 us (100 kHz) */
   static const int T1 = 4;
 
-  /** Basic clock delay time: 4.7 us */
+  /** Basic clock delay time: 4.7 us (100 kHz) */
   static const int T2 = 5;
 
   /** Maximum number of clock stretching retries: 100 us */
@@ -148,7 +147,7 @@ protected:
   /** Clock signal pin. */
   GPIO<SCL_PIN> m_scl;
 
-  /** Transaction state. */
+  /** Transaction state; start or repeated start condition. */
   bool m_start;
 
   /**
@@ -187,6 +186,7 @@ protected:
    */
   bool repeated_start_condition()
   {
+    delayMicroseconds(T1);
     m_sda.input();
     if (m_sda == 0) return (false);
     m_scl.input();
@@ -204,6 +204,7 @@ protected:
    */
   bool stop_condition()
   {
+    delayMicroseconds(T1);
     m_sda.output();
     m_scl.input();
     delayMicroseconds(T1);
