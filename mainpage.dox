@@ -1,9 +1,10 @@
 /** @mainpage Arduino-TWI
 
 The TWI library is an abstract interface for I2C device drivers. The
-library includes a Hardware::TWI and Software::TWI implementation, and
-example device drivers for I2C Humidity and Temperature Sensor
-(Si70XX), and Remote 8-bit I/O expander (PCF8574/PCF8574A).
+library includes a Hardware::TWI and Software::TWI bus manager
+implementation, and example device drivers for I2C Humidity and
+Temperature Sensor (Si70XX), and Remote 8-bit I/O expander
+(PCF8574/PCF8574A).
 
 Version: 1.6
 */
