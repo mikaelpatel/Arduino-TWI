@@ -22,11 +22,11 @@
 #include "TWI.h"
 
 /**
- * Driver for the Bosch BMP085 Digital Pressure Sensor.
+ * TWI Device Driver for the Bosch BMP085 Digital Pressure Sensor.
  *
  * @section Circuit
- * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals and
- * 3V3 internal voltage converter.
+ * The GY-80 10DOF module with pull-up resistors (4K7) for TWI signals
+ * and internal 3V3 voltage converter.
  * @code
  *                           GY-80
  *                       +------------+
@@ -75,7 +75,7 @@ public:
   /**
    * Initiate device driver. Load calibration coefficients from device.
    * Return true(1) if successful otherwise false(0).
-   * @param[in] mode oversampling mode (Default ULTRA_LOW_POWER).
+   * @param[in] mode oversampling (Default ULTRA_LOW_POWER).
    * @return bool.
    */
   bool begin(Mode mode = ULTRA_LOW_POWER)
@@ -87,13 +87,14 @@ public:
     if (!acquire()) return (false);
     uint8_t reg = COEFF_REG;
     write(&reg, sizeof(reg));
-    read(&m_param, sizeof(m_param));
+    int res = read(&m_param, sizeof(m_param));
     if (!release()) return (false);
+    if (res != sizeof(m_param)) return (false);
 
-    // Adjust coefficients to little endien
+    // Adjust coefficients to little endian
     uint16_t* p = (uint16_t*) &m_param;
     for (size_t i = 0; i < sizeof(param_t) / sizeof(uint16_t); i++, p++)
-      *p = __builtin_bswap16(*p);
+      *p = bswap16(*p);
 
     return (true);
   }
@@ -143,8 +144,8 @@ public:
     read(&UT, sizeof(UT));
     if (!release()) return (false);
 
-    // Adjust for little endien
-    UT = __builtin_bswap16(UT);
+    // Adjust for little-endian
+    UT = bswap16(UT);
 
     // Temperature calculation
     int32_t X1 = ((((int32_t) UT) - m_param.ac6) * m_param.ac5) >> 15;
@@ -219,7 +220,7 @@ public:
     if (!release()) return (false);
 
     // Adjust for little endian and resolution (oversampling mode)
-    int32_t UP = __builtin_bswap32(res.as_int32) >> (8 - m_mode);
+    int32_t UP = bswap32(res.as_int32) >> (8 - m_mode);
     int32_t B3, B6, X1, X2, X3;
     uint32_t B4, B7;
 

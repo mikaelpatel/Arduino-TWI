@@ -20,6 +20,7 @@
 #define TWI_H
 
 #include "iovec.h"
+#include "bswap.h"
 
 /**
  * Abstract Two-Wire Interface (TWI) class.
