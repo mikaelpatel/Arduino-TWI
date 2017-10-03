@@ -6,7 +6,7 @@ implementation, and example device drivers for I2C Humidity and
 Temperature Sensor (Si70XX), Remote 8-bit I/O expander (PCF8574 and
 PCF8574A), and and Digital Pressure Sensor (BMP085).
 
-Version: 1.7
+Version: 1.8
 */
 
 /** @page License
