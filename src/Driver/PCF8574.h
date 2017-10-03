@@ -137,7 +137,7 @@ public:
   class GPIO {
   public:
     /** Pin bit position mask. */
-    static const uint8_t MASK = _BV(PIN & 0x7);
+    static const uint8_t MASK = (1 << (PIN & 0x7));
 
     /**
      * Construct pin handler with given PCF8574 device driver.

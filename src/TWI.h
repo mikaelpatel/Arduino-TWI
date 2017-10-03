@@ -110,7 +110,9 @@ public:
   /**
    * Default constructor.
    */
-  TWI() : m_busy(false) {}
+  TWI() :
+    m_busy(false)
+  {}
 
   /**
    * @override{TWI}
@@ -165,6 +167,7 @@ public:
   virtual int write(uint8_t addr, iovec_t* vp) = 0;
 
 protected:
+  /** Device driver semaphore. */
   volatile bool m_busy;
 };
 #endif

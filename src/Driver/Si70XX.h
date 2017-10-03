@@ -53,7 +53,9 @@ public:
   /**
    * Create device driver instance.
    */
-  Si70XX(TWI& twi) : TWI::Device(twi, 0x40) {}
+  Si70XX(TWI& twi) :
+    TWI::Device(twi, 0x40)
+  {}
 
   /**
    * Read configuration register, Return true(1) if successful
