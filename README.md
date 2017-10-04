@@ -8,8 +8,9 @@ Sensor (BMP085).
 
 The software bus manager implementation of the TWI interface uses the
 [Arduino-GPIO](https://github.com/mikaelpatel/Arduino-GPIO)
-library. Both bus manager implementations supports both repeated start
-condition and device driver mutex on multi-tasking.
+library. Both software and avr hardware bus manager implementations
+supports repeated start condition and device driver mutex on
+multi-tasking.
 
 Repeated start condition allows combined write/read operations to one
 or more devices without releasing the bus and thus with the guarantee
@@ -24,8 +25,9 @@ Version: 1.8
 ## Classes
 
 * [Abstract Two-Wire Bus Manager and Device Driver Interface, TWI](./src/TWI.h)
-* [Hardware Two-Wire Interface, Hardware::TWI](./src/Hardware/TWI.h)
-* [Software Two-Wire Interface, Software::TWI](./src/Software/TWI.h)
+* [AVR Two-Wire Bus Manager, Hardware::TWI](./src/Hardware/AVR/TWI.h)
+* [SAM Two-Wire Bus Manager, Hardware::TWI](./src/Hardware/SAM/TWI.h)
+* [Software Two-Wire Bus Manager, Software::TWI](./src/Software/TWI.h)
 * [Digital Pressure Sensor, BMP085](./src/Driver/BMP085.h)
 * [Humidity and Temperature Sensor, Si70XX](./src/Driver/Si70XX.h)
 * [Remote 8-bit I/O expander, PCF8574](./src/Driver/PCF8574.h)
