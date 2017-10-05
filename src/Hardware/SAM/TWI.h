@@ -76,10 +76,7 @@ public:
     bool res = true;
 
     // Check for terminating write sequence with stop condition
-    if (m_state == WRITE_STATE) {
-      TWI_Stop(m_twi);
-      res = TWI_WaitTransferComplete(m_twi, RETRY_MAX);
-    }
+    if (m_state == WRITE_STATE) res = stop_condition();
 
     // Mark bus manager as idle
     m_busy = false;
@@ -99,27 +96,35 @@ public:
   {
     // Ignore zero length read
     if (count == 0) return (0);
+    uint32_t retry;
 
     // Check if stop condition is needed before read
-    if (m_state == WRITE_STATE) {
-      TWI_Stop(m_twi);
-      if (!TWI_WaitTransferComplete(m_twi, RETRY_MAX)) return (-1);
-    }
-    m_state = BUSY_STATE;
+    if (m_state == WRITE_STATE && !stop_condition()) return (-1);
+
+    // Adjust address
+    addr >>= 1;
 
     // Read requested bytes from device
     int res = 0;
-    TWI_StartRead(m_twi, addr >> 1, 0, 0);
-    if (!TWI_WaitByteReceived(m_twi, RETRY_MAX)) return (-1);
+    m_twi->TWI_MMR = (addr << 16) | TWI_MMR_MREAD;
+    m_twi->TWI_CR = TWI_CR_START;
+    retry = RETRY_MAX;
+    while (((m_twi->TWI_SR & TWI_SR_RXRDY) == 0) && (--retry));
+    if (retry == 0) return (-1);
+
     uint8_t* bp = (uint8_t*) buf;
     size_t size = count;
     while (size--) {
-      if (size == 0) TWI_SendSTOPCondition(m_twi);
-      if (!TWI_WaitByteReceived(m_twi, RETRY_MAX)) break;
-      *bp++ = TWI_ReadByte(m_twi);
+      if (size == 0) m_twi->TWI_CR |= TWI_CR_STOP;
+      retry = RETRY_MAX;
+      while (((m_twi->TWI_SR & TWI_SR_RXRDY) == 0) && (--retry));
+      if (retry == 0) return (-1);
+      *bp++ = m_twi->TWI_RHR;
       res += 1;
     }
-    TWI_WaitTransferComplete(m_twi, RETRY_MAX);
+    retry = RETRY_MAX;
+    while (((m_twi->TWI_SR & TWI_SR_TXCOMP) == 0) && (--retry));
+    if (retry == 0) return (-1);
 
     // Return number of bytes read
     return (res);
@@ -134,36 +139,38 @@ public:
    */
   virtual int write(uint8_t addr, iovec_t* vp)
   {
+    uint32_t retry;
+
+    // Adjust address
+    addr >>= 1;
+
     // Check for scan of given device
     if (vp == NULL) {
-      TWI_StartWrite(m_twi, addr >> 1, 0, 0, 0);
-      TWI_Stop(m_twi);
-      if (!TWI_WaitTransferComplete(m_twi, RETRY_MAX)) return (-1);
+      m_twi->TWI_MMR = (addr << 16);
+      m_twi->TWI_THR = 0;
+      if (!stop_condition()) return (-1);
       return (0);
     }
 
     // Check for preceeding write state
-    bool start = (m_state != WRITE_STATE);
-    int res = 0;
+    if (m_state != WRITE_STATE) m_twi->TWI_MMR = (addr << 16);
     m_state = WRITE_STATE;
+    int res = 0;
 
     // Write buffer sequence to the device
     for(; vp->buf != NULL; vp++) {
       const uint8_t* bp = (const uint8_t*) vp->buf;
       size_t size = vp->size;
       while (size--) {
-	if (start) {
-	  TWI_StartWrite(m_twi, addr >> 1, 0, 0, *bp++);
-	  start = false;
-	}
-	else
-	  TWI_WriteByte(m_twi, *bp++);
-	if (!TWI_WaitByteSent(m_twi, RETRY_MAX)) return (-1);
+	m_twi->TWI_THR = *bp++;
 	res += 1;
+	retry = RETRY_MAX;
+	while ((m_twi->TWI_SR & TWI_SR_TXRDY) == 0)
+	  if (--retry == 0) return (-1);
       }
     }
     // Do not terminate with a stop condition. Additional
-    // write may follow
+    // read/write may follow
 
     return (res);
   }
@@ -183,38 +190,18 @@ protected:
   };
   state_t m_state;
 
-  /* TWI/Wire support functions. */
-  static bool TWI_WaitTransferComplete(Twi* twi, uint32_t retry)
+  bool stop_condition()
   {
     uint32_t sr;
+    uint32_t retry = RETRY_MAX;
+    m_twi->TWI_CR = TWI_CR_STOP;
+    m_state = BUSY_STATE;
     do {
-      sr = TWI_GetStatus(twi);
-      if (sr & TWI_SR_NACK) return false;
-      if (--retry == 0) return false;
-    } while ((sr & TWI_SR_TXCOMP) != TWI_SR_TXCOMP);
-    return true;
-  }
-
-  static bool TWI_WaitByteSent(Twi* twi, uint32_t retry)
-  {
-    uint32_t sr;
-    do {
-      sr = TWI_GetStatus(twi);
-      if (sr & TWI_SR_NACK) return false;
-      if (--retry == 0) return false;
-    } while ((sr & TWI_SR_TXRDY) != TWI_SR_TXRDY);
-    return true;
-  }
-
-  static bool TWI_WaitByteReceived(Twi* twi, uint32_t retry)
-  {
-    uint32_t sr;
-    do {
-      sr = TWI_GetStatus(twi);
-      if (sr & TWI_SR_NACK) return false;
-      if (--retry == 0) return false;
-    } while ((sr & TWI_SR_RXRDY) != TWI_SR_RXRDY);
-    return true;
+      sr = m_twi->TWI_SR;
+      if (sr & TWI_SR_NACK) return (false);
+      if (--retry == 0) return (false);
+    } while ((sr & TWI_SR_TXCOMP) == 0);
+    return (true);
   }
 };
 };

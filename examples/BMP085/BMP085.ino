@@ -2,7 +2,7 @@
 #include "Driver/BMP085.h"
 
 // Configure: TWI bus manager (software or hardware)
-#define USE_SOFTWARE_TWI
+// #define USE_SOFTWARE_TWI
 
 #if defined(USE_SOFTWARE_TWI)
 #include "GPIO.h"
@@ -10,10 +10,9 @@
 Software::TWI<BOARD::D18, BOARD::D19> twi;
 #else
 // Configure: Hardware TWI bus clock frequency (100 or 400 kHz)
-#define FREQ 100000UL
-// #define FREQ 400000UL
 #include "Hardware/TWI.h"
-Hardware::TWI twi(FREQ);
+Hardware::TWI twi(100000UL);
+// Hardware::TWI twi(400000UL);
 #endif
 
 BMP085 bmp(twi);
