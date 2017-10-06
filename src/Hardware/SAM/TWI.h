@@ -105,17 +105,12 @@ public:
     addr >>= 1;
 
     // Read requested bytes from device
+    uint8_t* bp = (uint8_t*) buf;
     int res = 0;
     m_twi->TWI_MMR = (addr << 16) | TWI_MMR_MREAD;
     m_twi->TWI_CR = TWI_CR_START;
-    retry = RETRY_MAX;
-    while (((m_twi->TWI_SR & TWI_SR_RXRDY) == 0) && (--retry));
-    if (retry == 0) return (-1);
-
-    uint8_t* bp = (uint8_t*) buf;
-    size_t size = count;
-    while (size--) {
-      if (size == 0) m_twi->TWI_CR |= TWI_CR_STOP;
+    while (count--) {
+      if (count == 0) m_twi->TWI_CR |= TWI_CR_STOP;
       retry = RETRY_MAX;
       while (((m_twi->TWI_SR & TWI_SR_RXRDY) == 0) && (--retry));
       if (retry == 0) return (-1);
