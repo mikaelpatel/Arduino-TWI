@@ -11,7 +11,11 @@
 Software::Serial<BOARD::D0> Serial;
 Software::TWI<BOARD::D1, BOARD::D2> twi;
 #else
+#if defined(SAM)
 Software::TWI<BOARD::D8, BOARD::D9> twi;
+#else
+Software::TWI<BOARD::D18, BOARD::D19> twi;
+#endif
 #endif
 
 #else
@@ -29,16 +33,18 @@ void setup()
 
 void loop()
 {
+  // Scan twi device addresses. Print address of all devices
+  // that respond to a write request
   int i = 0;
   for (uint8_t addr = 3; addr < 128; addr++) {
     TWI::Device dev(twi, addr);
     dev.acquire();
     int res = dev.write(NULL);
     dev.release();
-    if (res != 0) continue;
+    if (res < 0) continue;
     Serial.print(i++);
-    Serial.print(':');
-    Serial.print(F(" 0x"));
+    Serial.print(F(":addr=0x"));
+    if (addr < 0x10) Serial.print(0);
     Serial.println(addr, HEX);
   }
   Serial.println();
