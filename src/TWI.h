@@ -167,7 +167,24 @@ public:
   virtual int write(uint8_t addr, iovec_t* vp) = 0;
 
 protected:
-  /** Device driver semaphore. */
+  /** Bus manager semaphore. */
   volatile bool m_busy;
+
+  /**
+   * Lock bus manager.
+   */
+  void lock()
+  {
+    while (m_busy) yield();
+    m_busy = true;
+  }
+
+  /**
+   * Unlock bus manager.
+   */
+  void unlock()
+  {
+    m_busy = false;
+  }
 };
 #endif

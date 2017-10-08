@@ -11,8 +11,9 @@
 Software::Serial<BOARD::D0> Serial;
 Software::TWI<BOARD::D1, BOARD::D2> twi;
 #else
-Software::TWI<BOARD::D18, BOARD::D19> twi;
+Software::TWI<BOARD::D8, BOARD::D9> twi;
 #endif
+
 #else
 // Configure: Hardware TWI bus clock frequency (100 or 400 kHz)
 #include "Hardware/TWI.h"

@@ -59,8 +59,7 @@ public:
   virtual bool acquire()
   {
     // Wait for bus manager to become idle
-    while (m_busy) yield();
-    m_busy = true;
+    lock();
     m_state = BUSY_STATE;
     return (true);
   }
@@ -79,7 +78,7 @@ public:
     if (m_state == WRITE_STATE) res = stop_condition();
 
     // Mark bus manager as idle
-    m_busy = false;
+    unlock();
     m_state = IDLE_STATE;
     return (res);
   }

@@ -47,11 +47,8 @@ public:
    */
   virtual bool acquire()
   {
-    // Wait for bus manager to become idle
-    while (m_busy) yield();
-    m_busy = true;
-
     // Acquire bus and issue start condition
+    lock();
     m_start = true;
     TWCR = _BV(TWEN) | _BV(TWINT) | _BV(TWSTA);
     return iowait(START);
@@ -67,7 +64,7 @@ public:
   {
     // Mark bus manager as idle
     m_start = false;
-    m_busy = false;
+    unlock();
 
     // Issue stop condition and release bus
     TWCR = _BV(TWEN) | _BV(TWINT) | _BV(TWSTO);
