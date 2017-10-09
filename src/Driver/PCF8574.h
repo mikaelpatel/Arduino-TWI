@@ -94,7 +94,7 @@ public:
 
   /**
    * Get data port values.
-   * @return
+   * @return port value.
    */
   uint8_t port()
   {
@@ -103,8 +103,7 @@ public:
 
   /**
    * Write given value to the output pins.
-   * @param[in] value.
-   * @return bool.
+   * @param[in] value to write to port.
    */
   void write(uint8_t value)
   {
@@ -187,6 +186,7 @@ public:
     /**
      * Write pin state one(1) if given value is non-zero,
      * otherwise zero(0).
+     * @param[in] value to write.
      */
     void write(int value)
     {

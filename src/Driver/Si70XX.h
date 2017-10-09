@@ -1,5 +1,5 @@
 /**
- * @file Si70XX.hh
+ * @file Si70XX.h
  * @version 1.0
  *
  * @section License
