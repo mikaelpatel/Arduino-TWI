@@ -18,7 +18,7 @@
 
 #ifndef HARDWARE_TWI_H
 #define HARDWARE_TWI_H
-#if defined(AVR)
+#if defined(AVR) && defined(TWBR)
 #include "Hardware/AVR/TWI.h"
 #elif defined(SAM)
 #include "Hardware/SAM/TWI.h"
