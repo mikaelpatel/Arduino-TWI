@@ -1,5 +1,6 @@
 #include "TWI.h"
 #include "Driver/BMP085.h"
+#include "assert.h"
 
 // Configure: TWI bus manager (software or hardware)
 // #define USE_SOFTWARE_TWI
@@ -23,10 +24,7 @@ void setup()
   while (!Serial);
 
   // Start the digital pressure sensor
-  while (!bmp.begin(BMP085::ULTRA_LOW_POWER)) {
-    Serial.println(F("bmp.begin:error"));
-    delay(5000);
-  }
+  ASSERT(bmp.begin(BMP085::ULTRA_LOW_POWER));
 }
 
 void loop()
@@ -37,15 +35,11 @@ void loop()
   Serial.print(':');
 
   // Sample, calculate and print temperature and pressure
-  if (bmp.sample()) {
-    Serial.print(bmp.temperature() / 10.0);
-    Serial.print(F(" C, "));
-    Serial.print(bmp.pressure() / 100.0);
-    Serial.println(F(" hPa"));
-  }
-  else {
-    Serial.println(F("bmp.sample:error"));
-  }
+  ASSERT(bmp.sample());
+  Serial.print(bmp.temperature() / 10.0);
+  Serial.print(F(" C, "));
+  Serial.print(bmp.pressure() / 100.0);
+  Serial.println(F(" hPa"));
 
   // Periodic execute every two seconds
   delay(2000 - (millis() - start));

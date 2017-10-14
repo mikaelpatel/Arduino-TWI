@@ -1,6 +1,7 @@
 #include "GPIO.h"
 #include "TWI.h"
 #include "Driver/DS2482.h"
+#include "assert.h"
 
 // Configure: Software or Hardware TWI
 // #define USE_SOFTWARE_TWI
@@ -54,26 +55,6 @@ uint8_t one_wire_crc_update(uint8_t crc, uint8_t data)
   }
   return (crc);
 }
-
-// Check assertion to be true, otherwise print line and expression
-#define ASSERT(expr)							\
-  do {									\
-    if (!(expr)) {							\
-      Serial.print(__LINE__);						\
-      Serial.println(F(":assert:" #expr));				\
-      Serial.flush();							\
-      exit(0);								\
-    }									\
-  } while (0)
-
-
-// Print and evaluate expression
-#define TRACE(expr)							\
-  do {									\
-    Serial.print(#expr "=");						\
-    Serial.println(expr);						\
-  } while (0)
-
 
 void setup()
 {
