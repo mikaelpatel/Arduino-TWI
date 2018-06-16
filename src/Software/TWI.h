@@ -50,8 +50,7 @@ public:
    */
   virtual bool acquire()
   {
-    while (m_busy) yield();
-    m_busy = true;
+    lock();
     m_start = true;
     return (start_condition());
   }
@@ -64,9 +63,10 @@ public:
    */
   virtual bool release()
   {
+    bool res = stop_condition();
     m_start = false;
-    m_busy = false;
-    return (stop_condition());
+    unlock();
+    return (res);
   }
 
   /**

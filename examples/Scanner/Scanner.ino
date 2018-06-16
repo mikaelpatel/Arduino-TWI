@@ -1,7 +1,7 @@
 #include "TWI.h"
 
 // Configure: TWI bus manager (software or hardware)
-#define USE_SOFTWARE_TWI
+// #define USE_SOFTWARE_TWI
 
 #if defined(USE_SOFTWARE_TWI)
 #include "GPIO.h"
@@ -48,5 +48,5 @@ void loop()
     Serial.println(addr, HEX);
   }
   Serial.println();
-  delay(5000);
+  delay(2000);
 }
